@@ -15,6 +15,13 @@ def get_args():
     )
 
     parser.add_argument(
+        "-NL",
+        "--no-log",
+        action="store_true",
+        help="Do not log run",
+    )
+
+    parser.add_argument(
         "-trs",
         "--train-batch-size",
         type=int,

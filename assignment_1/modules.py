@@ -14,4 +14,5 @@ class VarDropout(nn.Module):
         batch_mask = (rand_mask > self.p).int()
         expanded_mask = batch_mask.unsqueeze(1)
         full_mask = expanded_mask.repeat(1, input_sequence.shape[1], 1)
+
         return (input_sequence * full_mask) * (1.0 / (1.0 - self.p))

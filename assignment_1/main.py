@@ -84,13 +84,13 @@ def init_weights(mat):
                     m.bias.data.fill_(0.01)
 
 
-args = get_args()
+glob_args = get_args()
 
-FROM_JSON = args["json"]
-TRAIN_BS = args["train_batch_size"]
-DEV_BS = args["dev_batch_size"]
-TEST_BS = args["test_batch_size"]
-
+FROM_JSON = glob_args["json"]
+TRAIN_BS = glob_args["train_batch_size"]
+DEV_BS = glob_args["dev_batch_size"]
+TEST_BS = glob_args["test_batch_size"]
+NO_LOG = glob_args["no_log"]
 load_dotenv()
 
 WANDB_SECRET = os.getenv("WANDB_SECRET")
@@ -153,30 +153,15 @@ else:
         "var_drop": False,
         "EPOCHS": 99,
         "OPT": "SGD",
+        "tag": "general",
     }
     experiments = [
         {
-            "lr": 1.8,
             "emb_drop": 0.5,
             "out_drop": 0.5,
             "var_drop": True,
-        },
-        {
-            "lr": 2.1,
-            "emb_drop": 0.5,
-            "out_drop": 0.5,
-            "var_drop": True,
-        },
-        {
-            "emb_drop": 0.1,
-            "out_drop": 0.1,
-            "var_drop": True,
-        },
-        {
-            "emb_drop": 0.25,
-            "out_drop": 0.0,
-            "var_drop": True,
-        },
+            "tag": "general",
+        }
     ]
 
 
@@ -196,6 +181,7 @@ for exp in experiments:
     tying = args["tying"]
     var_drop = args["var_drop"]
     OPT = args["OPT"]
+    tag = args["tag"]
     device = "cuda:0"
 
     vocab_len = len(lang.word2id)
@@ -239,12 +225,14 @@ for exp in experiments:
     else:
         run_name += "_SGD"
 
-    run_path = f"{save_path + run_name}_{generate_id(5)}/"
+    run_name += "_" + generate_id(5)
+    run_path = save_path + run_name + "/"
 
     if os.path.exists(run_path):
         while os.path.exists(run_path):
-            run_path = f"{save_path + run_name}_{generate_id(5)}/"
-
+            run_name += "_" + generate_id(5)
+            run_path = save_path + run_name + "/"
+    print("starting ", run_name)
     os.mkdir(run_path)
 
     # start a new wandb run to track this script
@@ -263,12 +251,13 @@ for exp in experiments:
             "tie": tying,
             "var_drop": var_drop,
             "dropout": [emb_drop, out_drop],
+            "tag": tag,
         },
     )
 
     EPOCHS = args["EPOCHS"]
-    PAT = 3
-    SAVE_RATE = 1
+    PAT = args["PAT"]
+    SAVE_RATE = 3
     losses_train = []
     losses_dev = []
     sampled_epochs = []
@@ -322,3 +311,4 @@ for exp in experiments:
 
     print("Best ppl: ", best_ppl)
     print("Test ppl: ", final_ppl)
+    wandb.finish()
