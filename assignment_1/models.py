@@ -55,5 +55,4 @@ class LM_LSTM_TWO(nn.Module):
         dropped_2 = self.drop_dec(rnn_out)
 
         output = self.decoder(dropped_2).permute(0, 2, 1)
-        breakpoint()
         return output
