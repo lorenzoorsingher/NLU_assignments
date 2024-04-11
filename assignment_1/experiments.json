@@ -1,0 +1,24 @@
+[
+    {
+        "lr": 1.8,
+        "emb_drop": 0.5,
+        "out_drop": 0.5,
+        "var_drop": true
+    },
+    {
+        "lr": 2.1,
+        "emb_drop": 0.5,
+        "out_drop": 0.5,
+        "var_drop": true
+    },
+    {
+        "emb_drop": 0.1,
+        "out_drop": 0.1,
+        "var_drop": true
+    },
+    {
+        "emb_drop": 0.25,
+        "out_drop": 0.0,
+        "var_drop": true
+    }
+]
