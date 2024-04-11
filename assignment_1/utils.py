@@ -1,4 +1,5 @@
 # Loading the corpus
+import random
 
 
 def read_file(path, eos_token="<eos>"):
@@ -43,3 +44,8 @@ class Lang:
                     output[w] = i
                     i += 1
         return output
+
+
+def generate_id(len=5):
+    STR_KEY_GEN = "ABCDEFGHIJKLMNOPQRSTUVWXYzabcdefghijklmnopqrstuvwxyz"
+    return "".join(random.choice(STR_KEY_GEN) for _ in range(len))

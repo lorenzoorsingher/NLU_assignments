@@ -17,6 +17,8 @@ from functools import partial
 from models import LM_LSTM_TWO
 from utils import Lang, read_file, get_vocab
 from dataLoader import PennTreeBank, DataLoader, collate_fn
+from setup import get_args
+from utils import generate_id
 
 
 def train_loop(data, optimizer, criterion, model, clip=5):
@@ -82,12 +84,19 @@ def init_weights(mat):
                     m.bias.data.fill_(0.01)
 
 
+args = get_args()
+
+FROM_JSON = args["json"]
+TRAIN_BS = args["train_batch_size"]
+DEV_BS = args["dev_batch_size"]
+TEST_BS = args["test_batch_size"]
+
 load_dotenv()
 
 WANDB_SECRET = os.getenv("WANDB_SECRET")
 wandb.login(key=WANDB_SECRET)
 
-FROM_JSON = True
+
 DEVICE = "cuda:0"  # it can be changed with 'cpu' if you do not have a gpu
 
 
@@ -106,44 +115,45 @@ dev_dataset = PennTreeBank(dev_raw, lang)
 test_dataset = PennTreeBank(test_raw, lang)
 
 # Dataloader instantiation
-# You can reduce the batch_size if the GPU memory is not enough
+print(f"Using Train BS: {TRAIN_BS}, Dev BS: {DEV_BS}, Test BS: {TEST_BS}")
+
 train_loader = DataLoader(
     train_dataset,
-    batch_size=256,
+    batch_size=TRAIN_BS,
     collate_fn=partial(collate_fn, pad_token=lang.word2id["<pad>"], device=DEVICE),
     shuffle=True,
 )
 dev_loader = DataLoader(
     dev_dataset,
-    batch_size=256,
+    batch_size=DEV_BS,
     collate_fn=partial(collate_fn, pad_token=lang.word2id["<pad>"], device=DEVICE),
 )
 test_loader = DataLoader(
     test_dataset,
-    batch_size=256,
+    batch_size=TEST_BS,
     collate_fn=partial(collate_fn, pad_token=lang.word2id["<pad>"], device=DEVICE),
 )
 
-defaults = {
-    "emb_size": 300,
-    "hid_size": 300,
-    "lr": 1.5,
-    "clip": 5,
-    "n_layers": 1,
-    "emb_drop": 0.1,
-    "out_drop": 0.1,
-    "tying": False,
-    "var_drop": False,
-    "EPOCHS": 99,
-    "OPT": "SGD",
-}
 
 save_path = "assignment_1/checkpoints/"
 
-
 if FROM_JSON:
-    experiments = json.load(open("assignment_1/experiments.json"))
+    print("loading from json...")
+    defaults, experiments = json.load(open("assignment_1/experiments.json"))
 else:
+    defaults = {
+        "emb_size": 300,
+        "hid_size": 300,
+        "lr": 1.5,
+        "clip": 5,
+        "n_layers": 1,
+        "emb_drop": 0.1,
+        "out_drop": 0.1,
+        "tying": False,
+        "var_drop": False,
+        "EPOCHS": 99,
+        "OPT": "SGD",
+    }
     experiments = [
         {
             "lr": 1.8,
@@ -229,19 +239,11 @@ for exp in experiments:
     else:
         run_name += "_SGD"
 
-    run_path = save_path + run_name + "/"
-    if os.path.exists(run_path):
+    run_path = f"{save_path + run_name}_{generate_id(5)}/"
 
+    if os.path.exists(run_path):
         while os.path.exists(run_path):
-            if not run_name.split("_")[-1].isdigit():
-                run_name += "_1"
-            else:
-                run_name = (
-                    "_".join(run_name.split("_")[:-1])
-                    + "_"
-                    + str(int(run_name.split("_")[-1]) + 1)
-                )
-            run_path = save_path + run_name + "/"
+            run_path = f"{save_path + run_name}_{generate_id(5)}/"
 
     os.mkdir(run_path)
 
