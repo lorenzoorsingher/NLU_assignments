@@ -8,6 +8,10 @@ class VarDropout(nn.Module):
         self.p = p
 
     def forward(self, input_sequence):
+
+        if not self.training:
+            return input_sequence
+
         rand_mask = torch.rand(
             (input_sequence.shape[::2]), requires_grad=True, device="cuda"
         )
