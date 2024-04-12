@@ -57,5 +57,14 @@ def get_args():
         metavar="",
     )
 
+    parser.add_argument(
+        "-s",
+        "--save-path",
+        type=str,
+        help="Set checkpoint save path",
+        default="assignment_1/checkpoints/",
+        metavar="",
+    )
+
     args = vars(parser.parse_args())
     return args

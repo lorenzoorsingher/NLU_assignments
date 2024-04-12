@@ -93,6 +93,7 @@ DEV_BS = glob_args["dev_batch_size"]
 TEST_BS = glob_args["test_batch_size"]
 LOG = not glob_args["no_log"]
 WANDB_SECRET = glob_args["wandb_secret"]
+SAVE_PATH = glob_args["save_path"]
 
 
 if LOG:
@@ -138,8 +139,6 @@ test_loader = DataLoader(
     collate_fn=partial(collate_fn, pad_token=lang.word2id["<pad>"], device=DEVICE),
 )
 
-
-save_path = "assignment_1/checkpoints/"
 
 if FROM_JSON:
     print("loading from json...")
@@ -230,12 +229,12 @@ for exp in experiments:
         run_name += "_SGD"
 
     run_name += "_" + generate_id(5)
-    run_path = save_path + run_name + "/"
+    run_path = SAVE_PATH + run_name + "/"
 
     if os.path.exists(run_path):
         while os.path.exists(run_path):
             run_name += "_" + generate_id(5)
-            run_path = save_path + run_name + "/"
+            run_path = SAVE_PATH + run_name + "/"
     print("starting ", run_name)
     os.mkdir(run_path)
 
