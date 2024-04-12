@@ -7,16 +7,13 @@ class VarDropout(nn.Module):
         super(VarDropout, self).__init__()
         self.p = p
 
-    def forward(self, input_sequence):
+    def forward(self, x):
 
         if not self.training:
-            return input_sequence
+            return x
 
-        rand_mask = torch.rand(
-            (input_sequence.shape[::2]), requires_grad=True, device="cuda"
-        )
-        batch_mask = (rand_mask > self.p).int()
-        expanded_mask = batch_mask.unsqueeze(1)
-        full_mask = expanded_mask.repeat(1, input_sequence.shape[1], 1)
+        rand_mask = torch.rand((x.shape[::2]), requires_grad=True, device="cuda")
+        expanded_mask = (rand_mask > self.p).int().unsqueeze(1)
+        full_mask = expanded_mask.repeat(1, x.shape[1], 1)
 
-        return (input_sequence * full_mask) * (1.0 / (1.0 - self.p))
+        return (x * full_mask) * (1.0 / (1.0 - self.p))

@@ -84,17 +84,21 @@ def init_weights(mat):
                     m.bias.data.fill_(0.01)
 
 
+load_dotenv()
 glob_args = get_args()
 
 FROM_JSON = glob_args["json"]
 TRAIN_BS = glob_args["train_batch_size"]
 DEV_BS = glob_args["dev_batch_size"]
 TEST_BS = glob_args["test_batch_size"]
-NO_LOG = glob_args["no_log"]
-load_dotenv()
+LOG = not glob_args["no_log"]
+WANDB_SECRET = glob_args["wandb_secret"]
 
-WANDB_SECRET = os.getenv("WANDB_SECRET")
-wandb.login(key=WANDB_SECRET)
+
+if LOG:
+    if WANDB_SECRET == "":
+        WANDB_SECRET = os.getenv("WANDB_SECRET")
+    wandb.login(key=WANDB_SECRET)
 
 
 DEVICE = "cuda:0"  # it can be changed with 'cpu' if you do not have a gpu
@@ -236,24 +240,25 @@ for exp in experiments:
     os.mkdir(run_path)
 
     # start a new wandb run to track this script
-    wandb.init(
-        # set the wandb project where this run will be logged
-        project="NLU_assignment",
-        name=run_name,
-        config={
-            "model": str(type(model).__name__),
-            "lr": lr,
-            "optim": str(type(optimizer).__name__),
-            "clip": clip,
-            "hid_size": hid_size,
-            "emb_size": emb_size,
-            "layers": n_layers,
-            "tie": tying,
-            "var_drop": var_drop,
-            "dropout": [emb_drop, out_drop],
-            "tag": tag,
-        },
-    )
+    if LOG:
+        wandb.init(
+            # set the wandb project where this run will be logged
+            project="NLU_assignment",
+            name=run_name,
+            config={
+                "model": str(type(model).__name__),
+                "lr": lr,
+                "optim": str(type(optimizer).__name__),
+                "clip": clip,
+                "hid_size": hid_size,
+                "emb_size": emb_size,
+                "layers": n_layers,
+                "tie": tying,
+                "var_drop": var_drop,
+                "dropout": [emb_drop, out_drop],
+                "tag": tag,
+            },
+        )
 
     EPOCHS = args["EPOCHS"]
     PAT = args["PAT"]
@@ -294,7 +299,8 @@ for exp in experiments:
                 + " P: "
                 + str(patience)
             )
-            wandb.log({"ppl": ppl_dev, "ppl_train": ppl_train, "loss": loss_dev})
+            if LOG:
+                wandb.log({"ppl": ppl_dev, "ppl_train": ppl_train, "loss": loss_dev})
 
         if epoch % SAVE_RATE == 0:
             checkpoint_path = run_path + "epoch_" + ("0000" + str(epoch))[-4:] + ".pt"
@@ -311,4 +317,5 @@ for exp in experiments:
 
     print("Best ppl: ", best_ppl)
     print("Test ppl: ", final_ppl)
-    wandb.finish()
+    if LOG:
+        wandb.finish()

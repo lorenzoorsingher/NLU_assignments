@@ -48,5 +48,14 @@ def get_args():
         metavar="",
     )
 
+    parser.add_argument(
+        "-w",
+        "--wandb-secret",
+        type=str,
+        help="Set wandb secret",
+        default="",
+        metavar="",
+    )
+
     args = vars(parser.parse_args())
     return args
