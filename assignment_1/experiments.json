@@ -11,7 +11,8 @@
     "EPOCHS": 120,
     "OPT": "SGD",
     "PAT": 5,
-    "tag":"general"
+    "tag":"general",
+    "arch":"LSTM"
 },
 
 

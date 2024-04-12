@@ -157,6 +157,7 @@ else:
         "EPOCHS": 99,
         "OPT": "SGD",
         "tag": "general",
+        "arch": "LSTM",
     }
     experiments = [
         {
@@ -185,6 +186,7 @@ for exp in experiments:
     var_drop = args["var_drop"]
     OPT = args["OPT"]
     tag = args["tag"]
+    arch = args["arch"]
     device = "cuda:0"
 
     vocab_len = len(lang.word2id)
@@ -199,6 +201,7 @@ for exp in experiments:
         n_layers=n_layers,
         var_drop=var_drop,
         pad_index=lang.word2id["<pad>"],
+        arch=arch,
     ).to(device)
 
     model.apply(init_weights)

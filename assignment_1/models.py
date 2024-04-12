@@ -15,20 +15,28 @@ class LM_LSTM_TWO(nn.Module):
         pad_index=0,
         emb_dropout=0.1,
         out_dropout=0.1,
+        arch="LSTM",
         n_layers=1,
     ):
         super(LM_LSTM_TWO, self).__init__()
 
         if tie:
             if hidden_size != emb_size:
-                print("WARNING: hidden size and emb size not tied")
+                print("WARNING: hidden size and emb size do not match")
             hidden_size = emb_size
 
         self.embedding = nn.Embedding(output_size, emb_size, padding_idx=pad_index)
 
-        self.rnn = nn.LSTM(
-            emb_size, hidden_size, n_layers, bidirectional=False, batch_first=True
-        )
+        if arch == "RNN":
+            print("Using RNN")
+            self.rnn = nn.RNN(
+                emb_size, hidden_size, n_layers, bidirectional=False, batch_first=True
+            )
+        else:
+            print("Using LSTM")
+            self.rnn = nn.LSTM(
+                emb_size, hidden_size, n_layers, bidirectional=False, batch_first=True
+            )
 
         self.pad_token = pad_index
 
