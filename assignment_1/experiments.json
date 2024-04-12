@@ -17,13 +17,25 @@
 
 [
     {
-        "emb_drop": 0.0,
+        "emb_drop": 0.25,
         "out_drop": 0.25,
-        "var_drop": true
+        "var_drop": true,
+        "tying": true,
+        "EPOCHS": 150
     },
     {
+        "hid_size": 500,
         "emb_drop": 0.25,
-        "out_drop": 0.0,
-        "var_drop": true
+        "out_drop": 0.25,
+        "var_drop": true,
+        "EPOCHS": 150
+    },
+    {
+        "hid_size": 500,
+        "emb_drop": 0.25,
+        "out_drop": 0.25,
+        "var_drop": true,
+        "tying": true,
+        "EPOCHS": 150
     }
 ]]
