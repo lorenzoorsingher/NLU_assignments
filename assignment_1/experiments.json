@@ -18,25 +18,10 @@
 
 [
     {
-        "emb_drop": 0.25,
-        "out_drop": 0.25,
-        "var_drop": true,
-        "tying": true,
-        "EPOCHS": 150
-    },
-    {
-        "hid_size": 500,
-        "emb_drop": 0.25,
-        "out_drop": 0.25,
-        "var_drop": true,
-        "EPOCHS": 150
-    },
-    {
-        "hid_size": 500,
-        "emb_drop": 0.25,
-        "out_drop": 0.25,
-        "var_drop": true,
-        "tying": true,
+        "emb_size": 200,
+        "hid_size": 200,
+        "OPT": "ASGD",
+        "PAT": 1,
         "EPOCHS": 150
     }
 ]]

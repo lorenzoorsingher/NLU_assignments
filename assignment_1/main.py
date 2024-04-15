@@ -206,8 +206,8 @@ for exp in experiments:
 
     model.apply(init_weights)
 
-    if OPT == "SGD":
-        print("using SGD")
+    if OPT == "SGD" or OPT == "ASGD":
+        print("using ", OPT)
         optimizer = optim.SGD(model.parameters(), lr=lr)
     else:
         print("using AdamW")
@@ -226,10 +226,7 @@ for exp in experiments:
         run_name += "_VD"
     if tying:
         run_name += "_TIE"
-    if OPT == "AdamW":
-        run_name += "_AdamW"
-    else:
-        run_name += "_SGD"
+    run_name += "_" + str(OPT)
 
     run_name += "_" + generate_id(5)
     run_path = SAVE_PATH + run_name + "/"
@@ -282,7 +279,19 @@ for exp in experiments:
             sampled_epochs.append(epoch)
             losses_train.append(np.asarray(loss).mean())
 
-            ppl_dev, loss_dev = eval_loop(dev_loader, criterion_eval, model)
+            if "t0" in optimizer.param_groups[0]:
+                tmp = {}
+                for prm in model.parameters():
+                    tmp[prm] = prm.data.clone()
+                    prm.data = optimizer.state[prm]["ax"].clone()
+
+                ppl_dev, loss_dev = eval_loop(dev_loader, criterion_eval, model)
+
+                for prm in model.parameters():
+                    prm.data = tmp[prm].clone()
+
+            else:
+                ppl_dev, loss_dev = eval_loop(dev_loader, criterion_eval, model)
             losses_dev.append(np.asarray(loss_dev).mean())
 
             if ppl_dev < best_ppl:  # the lower, the better
@@ -309,7 +318,12 @@ for exp in experiments:
             torch.save(model.state_dict(), checkpoint_path)
 
         if patience <= 0:  # Early stopping with patience
-            break  # Not nice but it keeps the code clean
+            if OPT == "ASGD" and "t0" not in optimizer.param_groups[0]:
+                print("AverageSGD triggered")
+                optimizer = torch.optim.ASGD(model.parameters(), lr=lr, t0=0, lambd=0.0)
+                patience = PAT
+            else:
+                break  # Not nice but it keeps the code clean
 
     checkpoint_path = run_path + "epoch_" + ("0000" + str(epoch))[-4:] + ".pt"
     torch.save(model.state_dict(), checkpoint_path)
