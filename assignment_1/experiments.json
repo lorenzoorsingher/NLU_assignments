@@ -18,10 +18,12 @@
 
 [
     {
-        "emb_size": 200,
-        "hid_size": 200,
+        "lr":1.8,
         "OPT": "ASGD",
-        "PAT": 1,
+        "emb_drop": 0.25,
+        "out_drop": 0.25,
+        "var_drop": true,
+        "tying": true,
         "EPOCHS": 150
     }
 ]]
