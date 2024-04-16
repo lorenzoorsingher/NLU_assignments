@@ -19,11 +19,55 @@
 [
     {
         "lr":1.8,
-        "OPT": "ASGD",
+        "OPT": "SGD",
+        "emb_drop": 0.0,
+        "out_drop": 0.0,
+        "EPOCHS": 160,
+        "tag":"ablation"
+    },
+    {
+        "lr":1.8,
+        "OPT": "SGD",
+        "emb_drop": 0.25,
+        "out_drop": 0.25,
+        "EPOCHS": 160,
+        "tag":"ablation"
+    },
+    {
+        "lr":1.8,
+        "OPT": "SGD",
+        "emb_drop": 0.25,
+        "out_drop": 0.25,
+        "var_drop": true,
+        "EPOCHS": 160,
+        "tag":"ablation"
+    },
+    {
+        "lr":1.8,
+        "OPT": "SGD",
+        "emb_drop": 0.0,
+        "out_drop": 0.0,
+        "tying": true,
+        "EPOCHS": 160,
+        "tag":"ablation"
+    },
+    {
+        "lr":1.8,
+        "OPT": "SGD",
+        "emb_drop": 0.25,
+        "out_drop": 0.25,
+        "tying": true,
+        "EPOCHS": 160,
+        "tag":"ablation"
+    },
+    {
+        "lr":1.8,
+        "OPT": "SGD",
         "emb_drop": 0.25,
         "out_drop": 0.25,
         "var_drop": true,
         "tying": true,
-        "EPOCHS": 150
+        "EPOCHS": 160,
+        "tag":"ablation"
     }
 ]]
