@@ -19,29 +19,32 @@
 [
 
     {
-        "lr":1.5,
-        "OPT": "SGD",
-        "emb_drop": 0.10,
-        "out_drop": 0.10,
-        "var_drop": true,
-        "EPOCHS": 160,
-        "tag":"drop_rates"
-    },
-    {
-        "lr":1.5,
-        "OPT": "SGD",
+        "lr":2,
+        "OPT": "ASDG",
         "emb_drop": 0.25,
         "out_drop": 0.25,
         "var_drop": true,
+        "tying": true,
         "EPOCHS": 160,
         "tag":"drop_rates"
     },
     {
-        "lr":1.5,
-        "OPT": "SGD",
-        "emb_drop": 0.5,
-        "out_drop": 0.5,
+        "lr":2,
+        "OPT": "ASDG",
+        "emb_drop": 0.35,
+        "out_drop": 0.35,
         "var_drop": true,
+        "tying": true,
+        "EPOCHS": 160,
+        "tag":"drop_rates"
+    },
+    {
+        "lr":2.3,
+        "OPT": "ASDG",
+        "emb_drop": 0.35,
+        "out_drop": 0.35,
+        "var_drop": true,
+        "tying": true,
         "EPOCHS": 160,
         "tag":"drop_rates"
     }

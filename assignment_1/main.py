@@ -218,10 +218,10 @@ for exp in experiments:
     model.apply(init_weights)
 
     if OPT == "SGD" or OPT == "ASGD":
-        print("using ", OPT)
+        print("Using ", OPT)
         optimizer = optim.SGD(model.parameters(), lr=lr)
     else:
-        print("using AdamW")
+        print("Using AdamW")
         optimizer = optim.AdamW(model.parameters(), lr=lr)
 
     criterion_train = nn.CrossEntropyLoss(ignore_index=lang.word2id["<pad>"])
