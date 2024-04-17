@@ -20,7 +20,7 @@
 
     {
         "lr":2,
-        "OPT": "ASDG",
+        "OPT": "ASGD",
         "emb_drop": 0.25,
         "out_drop": 0.25,
         "var_drop": true,
@@ -30,7 +30,7 @@
     },
     {
         "lr":2,
-        "OPT": "ASDG",
+        "OPT": "ASGD",
         "emb_drop": 0.35,
         "out_drop": 0.35,
         "var_drop": true,
@@ -40,7 +40,7 @@
     },
     {
         "lr":2.3,
-        "OPT": "ASDG",
+        "OPT": "ASGD",
         "emb_drop": 0.35,
         "out_drop": 0.35,
         "var_drop": true,
