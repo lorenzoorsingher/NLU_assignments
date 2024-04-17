@@ -47,9 +47,11 @@ class LM_LSTM_TWO(nn.Module):
             self.decoder.weight = self.embedding.weight
 
         if var_drop:
+            print("Using VarDrop")
             self.drop_emb = VarDropout(p=emb_dropout)
             self.drop_dec = VarDropout(p=out_dropout)
         else:
+            print("Using Drop")
             self.drop_emb = nn.Dropout(p=emb_dropout)
             self.drop_dec = nn.Dropout(p=out_dropout)
 
