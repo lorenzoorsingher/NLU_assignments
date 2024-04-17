@@ -8,10 +8,11 @@ def get_args():
     )
 
     parser.add_argument(
-        "-J",
+        "-j",
         "--json",
-        action="store_true",
+        type=str,
         help="Load params from json",
+        default="",
     )
 
     parser.add_argument(

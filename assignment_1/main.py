@@ -87,7 +87,12 @@ def init_weights(mat):
 load_dotenv()
 glob_args = get_args()
 
-FROM_JSON = glob_args["json"]
+if glob_args["json"] == "":
+    FROM_JSON = False
+else:
+    FROM_JSON = True
+    json_path = glob_args["json"]
+
 TRAIN_BS = glob_args["train_batch_size"]
 DEV_BS = glob_args["dev_batch_size"]
 TEST_BS = glob_args["test_batch_size"]
@@ -142,7 +147,13 @@ test_loader = DataLoader(
 
 if FROM_JSON:
     print("loading from json...")
-    defaults, experiments = json.load(open("assignment_1/experiments.json"))
+    if os.path.exists(json_path):
+        filename = json_path.split("/")[-1]
+        print("loading from ", filename)
+        defaults, experiments = json.load(open(json_path))
+    else:
+        print("json not found, exiting...")
+        exit()
 else:
     defaults = {
         "emb_size": 300,
