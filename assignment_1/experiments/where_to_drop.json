@@ -18,24 +18,7 @@
 
 [
 
-    {
-        "lr":1.5,
-        "OPT": "SGD",
-        "emb_drop": 0.0,
-        "out_drop": 0.0,
-        "var_drop": true,
-        "EPOCHS": 160,
-        "tag":"where_to_drop"
-    },
-    {
-        "lr":1.5,
-        "OPT": "SGD",
-        "emb_drop": 0.0,
-        "out_drop": 0.25,
-        "var_drop": true,
-        "EPOCHS": 160,
-        "tag":"where_to_drop"
-    },
+
     {
         "lr":1.5,
         "OPT": "SGD",
@@ -49,6 +32,15 @@
         "lr":1.5,
         "OPT": "SGD",
         "emb_drop": 0.25,
+        "out_drop": 0.10,
+        "var_drop": true,
+        "EPOCHS": 160,
+        "tag":"where_to_drop"
+    },
+    {
+        "lr":1.5,
+        "OPT": "SGD",
+        "emb_drop": 0.10,
         "out_drop": 0.25,
         "var_drop": true,
         "EPOCHS": 160,
